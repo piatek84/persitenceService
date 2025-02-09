@@ -22,6 +22,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -142,6 +143,34 @@ class KafkaConsumerServiceTest {
         //TODO: Improve the verify adding the values of the result
         verify(resultRepository, times(1)).save(any());
         verify(logger, times(1)).info("**** Result saved with id: {} ****", resultObject.getId());
+    }
+
+    @Test
+    void deleteResult() throws JsonProcessingException {
+        //given
+        ObjectId id = new ObjectId();
+        String message = """
+                {"id": "%s"}
+                """.formatted(id.toString());
+        Result result = Result.builder()
+                .id(id)
+                .participantId1(new ObjectId())
+                .participantId2(new ObjectId())
+                .winDrawLostParticipant1(WINDRAWLOST.LOST)
+                .winDrawLostParticipant2(WINDRAWLOST.WIN)
+                .result("7-5, 7-5")
+                .championship("AO")
+                .date(LocalDate.of(2024, 10, 7))
+                .build();
+
+        when(resultRepository.findById(id.toString())).thenReturn(Optional.ofNullable(result));
+
+        //when
+        kafkaConsumerService.deleteResult(message);
+
+        //then
+        verify(resultRepository, times(1)).deleteById(id.toString());
+        verify(logger, times(1)).info("**** Result deleted with id: {} ****", id);
     }
 
     private static DateTimeFormatter getDateTimeFormatter() {
