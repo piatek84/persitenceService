@@ -10,52 +10,72 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.togglz.core.Feature;
+import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.repository.FeatureState;
+import org.togglz.core.util.NamedFeature;
 
 import java.util.Optional;
+
+import static com.coronel.persistenceService.togglz.MyFeatures.CONSUMER;
 
 @Service
 public class KafkaConsumerService {
     private final ParticipantRepository participantRepository;
     private final ResultRepository resultRepository;
+    private final FeatureManager featureManager;
     private final Logger logger = LoggerFactory.getLogger(KafkaConsumerService.class);
 
-    public KafkaConsumerService(ParticipantRepository participantRepository, ResultRepository resultRepository) {
+    //@Autowired This is optional if you have only one constructor
+    public KafkaConsumerService(ParticipantRepository participantRepository, ResultRepository resultRepository, FeatureManager featureManager) {
         this.participantRepository = participantRepository;
         this.resultRepository = resultRepository;
+        this.featureManager = featureManager;
     }
 
     @KafkaListener(topics = "addParticipant", groupId = "cgroup")
     public void addParticipant(String message) throws JsonProcessingException {
-        Participant participant = new ObjectMapper().readValue(message, Participant.class);
-        Participant dataBaseParticipant = participantRepository.save(participant);
-        logger.info("**** Participant with name: {} saved with id: {} ****", dataBaseParticipant.getName(), dataBaseParticipant.getId());
+        //TODO: Create an api to enable/disable the consumer
+        //featureManager.setFeatureState(new FeatureState(CONSUMER, true));
+        if (featureManager.isActive(CONSUMER)) {
+            Participant participant = new ObjectMapper().readValue(message, Participant.class);
+            Participant dataBaseParticipant = participantRepository.save(participant);
+            logger.info("**** Participant with name: {} saved with id: {} ****", dataBaseParticipant.getName(), dataBaseParticipant.getId());
+        } else logger.info("**** Ignore message because Consumer is not enabled ****");
     }
 
     @KafkaListener(topics = "deleteParticipant", groupId = "cgroup")
     public void deleteParticipant(String message) throws JsonProcessingException {
-        Deletion deletion = new ObjectMapper().readValue(message, Deletion.class);
-        Optional<Participant> dataBaseParticipant = participantRepository.findById(deletion.getId().toString());
-        //TODO: Control that participant can be not found or get can get more than one participant
-        participantRepository.deleteById(dataBaseParticipant.get().getId().toString());
-        logger.info("**** Participant deleted with name: {} and id: {} ****", dataBaseParticipant.get().getName(), dataBaseParticipant.get().getId());
+        if (featureManager.isActive(CONSUMER)) {
+            Deletion deletion = new ObjectMapper().readValue(message, Deletion.class);
+            Optional<Participant> dataBaseParticipant = participantRepository.findById(deletion.getId().toString());
+            //TODO: Control that participant can be not found or get can get more than one participant
+            participantRepository.deleteById(dataBaseParticipant.get().getId().toString());
+            logger.info("**** Participant deleted with name: {} and id: {} ****", dataBaseParticipant.get().getName(), dataBaseParticipant.get().getId());
+        } else logger.info("**** Ignore message because Consumer is not enabled ****");
     }
 
     @KafkaListener(topics = "addResult", groupId = "cgroup")
     public void addResult(String message) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        Result result = objectMapper.readValue(message, Result.class);
-        Result dataBaseResult = resultRepository.save(result);
-        logger.info("**** Result saved with id: {} ****", dataBaseResult.getId());
+        if (featureManager.isActive(CONSUMER)) {
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+            Result result = objectMapper.readValue(message, Result.class);
+            Result dataBaseResult = resultRepository.save(result);
+            logger.info("**** Result saved with id: {} ****", dataBaseResult.getId());
+        } else logger.info("**** Ignore message because Consumer is not enabled ****");
     }
 
     @KafkaListener(topics = "deleteResult", groupId = "cgroup")
     public void deleteResult(String message) throws JsonProcessingException {
-        Deletion deletion = new ObjectMapper().readValue(message, Deletion.class);
-        Optional<Result> dataBaseResult = resultRepository.findById(deletion.getId().toString());
-        //TODO: Control that result can be not found or get can get more than one result
-        resultRepository.deleteById(dataBaseResult.get().getId().toString());
-        logger.info("**** Result deleted with id: {} ****", dataBaseResult.get().getId());
+        if (featureManager.isActive(CONSUMER)) {
+            Deletion deletion = new ObjectMapper().readValue(message, Deletion.class);
+            Optional<Result> dataBaseResult = resultRepository.findById(deletion.getId().toString());
+            //TODO: Control that result can be not found or get can get more than one result
+            resultRepository.deleteById(dataBaseResult.get().getId().toString());
+            logger.info("**** Result deleted with id: {} ****", dataBaseResult.get().getId());
+        } else logger.info("**** Ignore message because Consumer is not enabled ****");
     }
 }

@@ -13,5 +13,7 @@ docker run -d --name kafka \
 bitnami/kafka:latest
 
 
-{"name": "Iga Świątek","country": "Poland","type": "PERSON","urlIcon": "http://icon.com"}
-{"participantId1":"67a730dcae1e04614ed13b61","participantId2":"67a730dcae1e04614ed13b62","winDrawLostParticipant1":"WIN","winDrawLostParticipant2":"LOST","result":"6-4,7-5","date":"07102024","championship":"Australian Open"}
+addParticipant -> {"name": "Iga Świątek","country": "Poland","type": "PERSON","urlIcon": "http://icon.com"}
+deleteParticipant -> {"id":"67d57ec661dad07e8f237991"}
+addResult -> {"participantId1":"67a730dcae1e04614ed13b61","participantId2":"67a730dcae1e04614ed13b62","winDrawLostParticipant1":"WIN","winDrawLostParticipant2":"LOST","result":"6-4,7-5","date":"07102024","championship":"Australian Open"}
+deleteResult -> {"id":"123"}

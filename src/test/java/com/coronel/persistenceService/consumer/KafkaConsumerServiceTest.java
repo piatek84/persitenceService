@@ -52,7 +52,6 @@ class KafkaConsumerServiceTest {
         ReflectionTestUtils.setField(kafkaConsumerService, "logger", logger);
     }
 
-
     @ParameterizedTest
     @EnumSource(value = Type.class, names = {"PERSON", "TEAM"})
     void addParticipant(Type type) throws JsonProcessingException {
