@@ -81,7 +81,8 @@ public class KafkaConsumerService {
     @KafkaListener(topics = "enableConsumer", groupId = "cgroup")
     public void enableConsumer(String message) throws JsonProcessingException {
         Enabler enabler = new ObjectMapper().readValue(message, Enabler.class);
-        ff4j.enable(CONSUMER_ENABLED);
+        if (enabler.isEnabled()) ff4j.enable(CONSUMER_ENABLED);
+        else ff4j.disable(CONSUMER_ENABLED);
         logger.info("**** enableConsumer: {} ****", enabler.isEnabled());
     }
 }
