@@ -78,15 +78,3 @@ bitnami/kafka:latest
 }
 ```
 
-## Updating Togglz Configuration
-You can enable or disable a feature using the following cURL command:
-```sh
-curl --location 'http://localhost:8080/api/togglz/update' \
---header 'Content-Type: application/json' \
---data '{
-  "enabled": true
-}'
-```
-
----
-
