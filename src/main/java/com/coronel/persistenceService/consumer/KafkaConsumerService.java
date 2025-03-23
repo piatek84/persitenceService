@@ -1,6 +1,7 @@
 package com.coronel.persistenceService.consumer;
 
 import com.coronel.persistenceService.model.Deletion;
+import com.coronel.persistenceService.model.Enabler;
 import com.coronel.persistenceService.model.Participant;
 import com.coronel.persistenceService.model.Result;
 import com.coronel.persistenceService.repository.ParticipantRepository;
@@ -39,7 +40,6 @@ public class KafkaConsumerService {
     @KafkaListener(topics = "addParticipant", groupId = "cgroup")
     public void addParticipant(String message) throws JsonProcessingException {
         //TODO: Create an api to enable/disable the consumer
-        //featureManager.setFeatureState(new FeatureState(CONSUMER, true));
         if (featureManager.isActive(CONSUMER)) {
             Participant participant = new ObjectMapper().readValue(message, Participant.class);
             Participant dataBaseParticipant = participantRepository.save(participant);
@@ -77,5 +77,12 @@ public class KafkaConsumerService {
             resultRepository.deleteById(dataBaseResult.get().getId().toString());
             logger.info("**** Result deleted with id: {} ****", dataBaseResult.get().getId());
         } else logger.info("**** Ignore message because Consumer is not enabled ****");
+    }
+
+    @KafkaListener(topics = "enableConsumer", groupId = "cgroup")
+    public void enableConsumer(String message) throws JsonProcessingException {
+            Enabler enabler = new ObjectMapper().readValue(message, Enabler.class);
+            featureManager.setFeatureState(new FeatureState(CONSUMER, enabler.isEnabled()));
+            logger.info("**** enableConsumer: {} ****", enabler.isEnabled());
     }
 }

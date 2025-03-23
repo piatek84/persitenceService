@@ -17,3 +17,11 @@ addParticipant -> {"name": "Iga Świątek","country": "Poland","type": "PERSON",
 deleteParticipant -> {"id":"67d57ec661dad07e8f237991"}
 addResult -> {"participantId1":"67a730dcae1e04614ed13b61","participantId2":"67a730dcae1e04614ed13b62","winDrawLostParticipant1":"WIN","winDrawLostParticipant2":"LOST","result":"6-4,7-5","date":"07102024","championship":"Australian Open"}
 deleteResult -> {"id":"123"}
+enableConsumer -> {"enabled": false}
+
+
+curl --location 'http://localhost:8080/api/togglz/update' \
+--header 'Content-Type: application/json' \
+--data '{
+"enabled": true
+}'
