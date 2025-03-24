@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 import static com.coronel.persistenceService.config.FF4jConfig.CONSUMER_ENABLED;
+import static com.coronel.persistenceService.config.FF4jConfig.SECOND_FEATURE;
 
 
 @Service
@@ -84,5 +85,13 @@ public class KafkaConsumerService {
         if (enabler.isEnabled()) ff4j.enable(CONSUMER_ENABLED);
         else ff4j.disable(CONSUMER_ENABLED);
         logger.info("**** enableConsumer: {} ****", enabler.isEnabled());
+    }
+
+    @KafkaListener(topics = "enableSecondFeature", groupId = "cgroup")
+    public void enableSecondFeature(String message) throws JsonProcessingException {
+        Enabler enabler = new ObjectMapper().readValue(message, Enabler.class);
+        if (enabler.isEnabled()) ff4j.enable(SECOND_FEATURE);
+        else ff4j.disable(SECOND_FEATURE);
+        logger.info("**** enableSecondFeature: {} ****", enabler.isEnabled());
     }
 }
