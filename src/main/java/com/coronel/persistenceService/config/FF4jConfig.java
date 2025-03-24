@@ -28,6 +28,7 @@ public class FF4jConfig {
         for (String f : features) {
             if (!ff4j.exist(f)) {
                 Feature feature = new Feature(f);
+                //Here we can add a flipping strategy
                 ff4j.createFeature(feature);
             }
         }
@@ -35,6 +36,5 @@ public class FF4jConfig {
     }
 }
 //        We can enable the feature after a date
-//        feature.setEnable(true);
 //        FlippingStrategy strategy = new ReleaseDateFlipStrategy("2025-03-23-18:55");
 //        feature.setFlippingStrategy(strategy);
