@@ -22,9 +22,10 @@ public class FF4jConfig {
             Feature feature = new Feature(f);
 //        We can enable the feature after a date
 //        feature.setEnable(true);
-//        FlippingStrategy strategy = new ReleaseDateFlipStrategy("2025-03-23-18:55");
+        FlippingStrategy strategy = new ReleaseDateFlipStrategy("2025-03-23-18:55");
 //        feature.setFlippingStrategy(strategy);
             ff4j.createFeature(feature);
+            //TODO: Save the features in a database
         }
 
 
