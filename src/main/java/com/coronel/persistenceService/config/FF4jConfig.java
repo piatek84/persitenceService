@@ -16,22 +16,23 @@ public class FF4jConfig {
 
     public static final String CONSUMER_ENABLED = "consumer-enabled";
     public static final String SECOND_FEATURE = "second-feature";
-    public static final List<String> features = List.of(CONSUMER_ENABLED, SECOND_FEATURE);
+    public static final List<String> FEATURES = List.of(CONSUMER_ENABLED, SECOND_FEATURE);
 
     @Bean
     public FF4j ff4j() {
+
         FeatureStoreMongo featureStore = new FeatureStoreMongo(
                 MongoClients.create("mongodb://localhost:27017"), "ff4jDB"
         );
+
         FF4j ff4j = new FF4j();
         ff4j.setFeatureStore(featureStore);
-        for (String f : features) {
-            if (!ff4j.exist(f)) {
-                Feature feature = new Feature(f);
-                //Here we can add a flipping strategy
-                ff4j.createFeature(feature);
+
+        FEATURES.forEach(feature -> {
+            if (!ff4j.exist(feature)) {
+                ff4j.createFeature(new Feature(feature));
             }
-        }
+        });
         return ff4j;
     }
 }
