@@ -1,4 +1,3 @@
-# README
 
 ## Setting Up MongoDB and Kafka with Docker
 
