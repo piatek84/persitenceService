@@ -39,7 +39,6 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = "addParticipant", groupId = "cgroup")
     public void addParticipant(String message) throws JsonProcessingException {
-        //TODO: Create an api to enable/disable the consumer
         if (ff4j.check(CONSUMER_ENABLED)) {
             Participant participant = new ObjectMapper().readValue(message, Participant.class);
             Participant dataBaseParticipant = participantRepository.save(participant);
@@ -79,19 +78,4 @@ public class KafkaConsumerService {
         } else logger.info("**** Ignore message because Consumer is not enabled ****");
     }
 
-    @KafkaListener(topics = "enableConsumer", groupId = "cgroup")
-    public void enableConsumer(String message) throws JsonProcessingException {
-        Enabler enabler = new ObjectMapper().readValue(message, Enabler.class);
-        if (enabler.isEnabled()) ff4j.enable(CONSUMER_ENABLED);
-        else ff4j.disable(CONSUMER_ENABLED);
-        logger.info("**** enableConsumer: {} ****", enabler.isEnabled());
-    }
-
-    @KafkaListener(topics = "enableSecondFeature", groupId = "cgroup")
-    public void enableSecondFeature(String message) throws JsonProcessingException {
-        Enabler enabler = new ObjectMapper().readValue(message, Enabler.class);
-        if (enabler.isEnabled()) ff4j.enable(SECOND_FEATURE);
-        else ff4j.disable(SECOND_FEATURE);
-        logger.info("**** enableSecondFeature: {} ****", enabler.isEnabled());
-    }
 }
