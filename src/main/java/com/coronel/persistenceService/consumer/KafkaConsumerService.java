@@ -26,7 +26,6 @@ public class KafkaConsumerService {
     private final ParticipantRepository participantRepository;
     private final ResultRepository resultRepository;
     private final FF4j ff4j;
-
     private final Logger logger = LoggerFactory.getLogger(KafkaConsumerService.class);
 
     //@Autowired This is optional if you have only one constructor
@@ -34,7 +33,6 @@ public class KafkaConsumerService {
         this.participantRepository = participantRepository;
         this.resultRepository = resultRepository;
         this.ff4j = ff4j;
-
     }
 
     @KafkaListener(topics = "addParticipant", groupId = "cgroup")
@@ -76,5 +74,4 @@ public class KafkaConsumerService {
             logger.info("**** Result deleted with id: {} ****", dataBaseResult.get().getId());
         } else logger.info("**** Ignore message because Consumer is not enabled ****");
     }
-
 }
