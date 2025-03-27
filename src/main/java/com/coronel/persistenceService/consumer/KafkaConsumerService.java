@@ -50,8 +50,7 @@ public class KafkaConsumerService {
     public void deleteParticipant(String message) throws JsonProcessingException {
         if (ff4j.check(CONSUMER_ENABLED)) {
             Deletion deletion = new ObjectMapper().readValue(message, Deletion.class);
-            Optional<Participant> dataBaseParticipant = participantRepository.findById(deletion.getId().toString());
-            //TODO: Control that participant can be not found or get can get more than one participant
+            Optional<Participant> dataBaseParticipant = participantRepository.findById(deletion.getId().toString()).stream().findFirst();
             participantRepository.deleteById(dataBaseParticipant.get().getId().toString());
             logger.info("**** Participant deleted with name: {} and id: {} ****", dataBaseParticipant.get().getName(), dataBaseParticipant.get().getId());
         } else logger.info("**** Ignore message because Consumer is not enabled ****");
