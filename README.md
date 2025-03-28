@@ -69,14 +69,6 @@ bitnami/kafka:latest
 }
 ```
 
-### Enable or Disable Consumer
-**Topic:** `enableConsumer`
-```json
-{
-  "enabled": false
-}
-```
-
 ### Swagger UI
 
 http://localhost:8080/swagger-ui/index.html
