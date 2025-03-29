@@ -168,7 +168,7 @@ class KafkaConsumerServiceTest {
                 .build();
 
         when(resultRepository.findById(id.toString())).thenReturn(Optional.ofNullable(result));
-        
+
         //when
         kafkaConsumerService.deleteResult(message);
 
