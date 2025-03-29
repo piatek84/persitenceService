@@ -54,6 +54,7 @@ class KafkaConsumerServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(kafkaConsumerService, "logger", logger);
+        when(ff4j.check(any())).thenReturn(true);
     }
 
     @ParameterizedTest
@@ -76,7 +77,6 @@ class KafkaConsumerServiceTest {
                 .urlIcon(urlIcon)
                 .build();
         when(participantRepository.save(any())).thenReturn(participant);
-        when(ff4j.check(any())).thenReturn(true);
 
         //when
         kafkaConsumerService.addParticipant(message);
@@ -97,7 +97,6 @@ class KafkaConsumerServiceTest {
                 {"id": "%s"}
                 """.formatted(id.toString());
         when(participantRepository.findById(id.toString())).thenReturn(java.util.Optional.of(new Participant(id, name, country, type, urlIcon)));
-        when(ff4j.check(any())).thenReturn(true);
 
         //when
         kafkaConsumerService.deleteParticipant(message);
@@ -140,7 +139,6 @@ class KafkaConsumerServiceTest {
                 .championship(championship)
                 .build();
         when(resultRepository.save(any())).thenReturn(resultObject);
-        when(ff4j.check(any())).thenReturn(true);
 
         //when
         kafkaConsumerService.addResult(message);
@@ -170,8 +168,7 @@ class KafkaConsumerServiceTest {
                 .build();
 
         when(resultRepository.findById(id.toString())).thenReturn(Optional.ofNullable(result));
-        when(ff4j.check(any())).thenReturn(true);
-
+        
         //when
         kafkaConsumerService.deleteResult(message);
 
