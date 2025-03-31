@@ -1,5 +1,12 @@
 
-## Setting Up MongoDB and Kafka with Docker
+## Persistence Service
+
+This project is designed to help practice fundamental programming concepts and testing techniques using Java, Spring Boot, and other technologies. The main goal is to build a small application while reinforcing best practices in software development.
+
+### Technologies Used
+TODO:
+
+### Setting Up MongoDB and Kafka with Docker
 
 ### Prerequisites
 Ensure you have [Docker](https://www.docker.com/) installed on your system before proceeding.
